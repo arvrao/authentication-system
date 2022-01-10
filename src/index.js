@@ -1,34 +1,29 @@
 const express = require('express')
 
 const app = express()
+const path = require('path')
 const PORT = process.env.PORT || 3000
 const mongoose = require('mongoose')
 const hbs = require('hbs')
 const dotenv = require('dotenv')
+
+// For login
 const jwt = require('jsonwebtoken')
 const cookieparser = require('cookie-parser')
+
+// For getting form contents
 const bp = require('body-parser')
-const path = require('path')
 
 // app.use(bp.json())
-
+// used for POST requests; based on body-parser
+app.use(express.json())
 // config files
 dotenv.config()
-
-// get the routes
-const homeRoute = require('./routers/home')
-const userRoute = require('./routers/user')
-
-app.use(express.json())
 
 // * bodyparser extended:true -> req.body object will contain values of any type instead of just strings.
 app.use(bp.urlencoded({
   extended: true
 }))
-
-// ROUTES
-app.use('/', homeRoute)
-app.use('/user', userRoute)
 
 
 
@@ -39,6 +34,15 @@ app.set('views', path.join(__dirname, 'views'))
 
 // set path for static files
 app.use('/static', express.static('static'))
+
+// get the routes
+const homeRoute = require('./routers/home')
+const userRoute = require('./routers/user')
+
+// ROUTES
+app.use('/', homeRoute)
+app.use('/user', userRoute)
+
 
 // DB connection
 mongoose
