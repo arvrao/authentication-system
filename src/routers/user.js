@@ -3,6 +3,7 @@ const router = express.Router()
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const User = require('../models/userModel')
+const jwt = require('jsonwebtoken')
 // const popup = require('popups')
 
 router.get('/login', (req, res) => {
@@ -114,6 +115,14 @@ router.post('/register', (req, res) => {
 	}
 })
 
+// sing the token
+const createToken = (id) => {
+	return jwt.sign({
+		id
+	}, 'secretkey')
+}
+
+
 router.post('/login', (req, res) => {
 	const {
 		email,
@@ -127,7 +136,11 @@ router.post('/login', (req, res) => {
 
 				bcrypt.compare(password, user.password, (err, isMatch) => {
 					if (isMatch) {
-						console.log('Worked');
+						// generate new random token
+						const token = createToken(user._id)
+
+						// store jwt in a cookie
+						res.cookie('access-token', token)
 						res.redirect('/dashboard')
 					} else {
 						res.render('login')
@@ -139,6 +152,13 @@ router.post('/login', (req, res) => {
 				res.render('login')
 			}
 		})
+})
+
+router.get('/logout', (req, res) => {
+	res.cookie('access-token', ' ', {
+		maxAge: 1
+	})
+	res.redirect('/user/login')
 })
 
 module.exports = router

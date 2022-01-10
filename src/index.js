@@ -25,7 +25,8 @@ app.use(bp.urlencoded({
   extended: true
 }))
 
-
+//cookie parser middleware to store jwt data
+app.use(cookieparser())
 
 // template engine
 app.set('view engine', 'hbs')
