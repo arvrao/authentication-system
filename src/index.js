@@ -44,6 +44,8 @@ const userRoute = require('./routers/user')
 app.use('/', homeRoute)
 app.use('/user', userRoute)
 
+app.use('*', (req, res) =>
+  res.status(404).send('Incorrect route'));
 
 // DB connection
 mongoose

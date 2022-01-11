@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
 // const popup = require('popups')
 
 router.get('/login', (req, res) => {
@@ -97,7 +98,7 @@ router.post('/register', (req, res) => {
 						user.password = salt;
 						user.save().then((user) => {
 							console.log('User has been created');
-							res.redirect('/user/login')
+							res.status(201).redirect('/user/login')
 						}).catch((err) => {
 							console.log(err);
 							res.redirect('user/register')
